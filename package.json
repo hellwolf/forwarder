@@ -1,0 +1,14 @@
+{
+  "name": "forwarder",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.6",
+    "eth-sig-util": "^2.5.3",
+    "ethereumjs-util": "^7.0.2",
+    "web3-utils": "^1.2.9"
+  }
+}
