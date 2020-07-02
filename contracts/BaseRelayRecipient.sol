@@ -1,7 +1,6 @@
 // SPDX-License-Identifier:MIT
 pragma solidity ^0.6.2;
 
-import "./0x/LibBytesV06.sol";
 import "./interfaces/IRelayRecipient.sol";
 
 /**
@@ -38,8 +37,11 @@ abstract contract BaseRelayRecipient is IRelayRecipient {
             // At this point we know that the sender is a trusted forwarder,
             // so we trust that the last bytes of msg.data are the verified sender address.
             // extract sender address from the end of msg.data
-            return payable(LibBytesV06.readAddress(msg.data, msg.data.length - 20));
+            assembly {
+                ret := shr(96,calldataload(sub(calldatasize(),20)))
+            }
+        } else {
+            return msg.sender;
         }
-        return msg.sender;
     }
 }
