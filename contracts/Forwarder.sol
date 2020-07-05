@@ -8,7 +8,7 @@ import "./IForwarder.sol";
 contract Forwarder is IForwarder {
     using ECDSA for bytes32;
 
-    string public constant GENERIC_PARAMS = "address to,bytes data,uint256 value,address from,uint256 nonce,uint256 gas";
+    string public constant GENERIC_PARAMS = "address from,address to,uint256 value,uint256 gas,uint256 nonce,bytes data";
 
     mapping(bytes32 => bool) public typeHashes;
 
@@ -34,9 +34,9 @@ contract Forwarder is IForwarder {
         ForwardRequest memory req,
         bytes32 domainSeparator,
         bytes32 requestTypeHash,
-        bytes memory suffixData,
-        bytes memory sig)
-    public override view {
+        bytes calldata suffixData,
+        bytes calldata sig)
+    external override view {
 
         _verifyNonce(req);
         _verifySig(req, domainSeparator, requestTypeHash, suffixData, sig);
@@ -46,10 +46,10 @@ contract Forwarder is IForwarder {
         ForwardRequest memory req,
         bytes32 domainSeparator,
         bytes32 requestTypeHash,
-        bytes memory suffixData,
-        bytes memory sig
+        bytes calldata suffixData,
+        bytes calldata sig
     )
-    public payable
+    external payable
     override
     returns (bool success, bytes memory ret) {
         _verifyNonce(req);
@@ -127,12 +127,12 @@ contract Forwarder is IForwarder {
         return abi.encodePacked(
             requestTypeHash,
             abi.encode(
-                req.to,
-                keccak256(req.data),
-                req.value,
                 req.from,
+                req.to,
+                req.value,
+                req.gas,
                 req.nonce,
-                req.gas
+                keccak256(req.data)
             ),
             suffixData
         );
