@@ -5,12 +5,12 @@ pragma experimental ABIEncoderV2;
 interface IForwarder {
 
     struct ForwardRequest {
-        address to;
-        bytes data;
-        uint256 value;
         address from;
-        uint256 nonce;
+        address to;
+        uint256 value;
         uint256 gas;
+        uint256 nonce;
+        bytes data;
     }
 
     function getNonce(address from)
@@ -19,7 +19,7 @@ interface IForwarder {
 
     /**
      * verify the transaction would execute.
-     * validate the signatrue and the nonce of the request.
+     * validate the signature and the nonce of the request.
      * revert if either signature or nonce are incorrect.
      */
     function verify(
